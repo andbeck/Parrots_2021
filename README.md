@@ -9,6 +9,8 @@ cd <target_directory>
 git clone https://github.com/andbeck/Parrots_2021.git
 ```
 
+If you use the HTTPS protocol as suggested above then you'll also need to [set up a personal access token for authentication](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+
 ## Code structure
 
 ### `data/`
