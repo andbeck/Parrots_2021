@@ -11,7 +11,8 @@ Parrot Demographic Modelling
 # Data section
 
 - Contains 2006-2014 spreadsheet focused on Bonaire long-term collection
-- Note that Issues from @tamora contain further data sources from YSA and other species.
+- Note that Issues from @tamora contain further data sources from YSA and other species - such as Lilac Crowned Amazon
+- Need to generate table like in appendices in Wisodom - a table with low uncertainty
 
 # Doc section
 
