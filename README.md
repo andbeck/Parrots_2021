@@ -1,23 +1,33 @@
 # Parrots_2021
 
-Parrot Demographic Modelling
+## Parrot Demographic Modelling
 
-## R Section
+To get started with this repository, clone it to a suitable location from the command line: 
 
-- Code to construct mean and se from YSA core data from Bonaire 2004-2016
-- Code to construct matrices
-- Code to analyse multiple matrices - needs LSA
+```
+cd <target_directory>
+git clone https://github.com/andbeck/Parrots_2021.git
+```
 
-# Data section
+## Code structure
+
+### `data/`
 
 - Contains 2006-2014 spreadsheet focused on Bonaire long-term collection
-- Note that Issues from @tamora contain further data sources from YSA and other species - such as Lilac Crowned Amazon
-- Need to generate table like in appendices in Wisodom - a table with low uncertainty
+- Note that [issue #1](https://github.com/andbeck/Parrots_2021/issues/1) from @tamora contains further data sources from YSA and other species - such as Lilac Crowned Amazon - this needs to be reviewed
+- Need to generate table like in appendices in Wisdom - a table with low uncertainty
 
-# Doc section
+### `doc/`
 
 - Contains starter for Markdown Files for reporting
 
-# Fig section
+### `fig/`
 
-- Contains picture for markdown reporting highlighting the life cycle currently used.
+- Contains picture for markdown reporting highlighting the life cycle currently used
+- Could also be used to save figures from analyses
+
+### `R/`
+
+- `main.R` Initial outline for code to analyse multiple matrices - needs LSA
+- `make_projection_matrix.R` Code to construct matrices
+- `YSA_life_history_data.R` Code to construct mean and se from YSA core data from Bonaire 2004-2016
