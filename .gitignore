@@ -41,6 +41,7 @@ vignettes/*.pdf
 # generated docs
 doc/*.html
 doc/*.pdf
+README.html
 
 # OS specific
 .DS_Store
