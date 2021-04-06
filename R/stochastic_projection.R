@@ -77,23 +77,23 @@ n0 <- c(20, 20, 20) #(chosen a bit randomly for now)
 
 ##repeat stochastic population growth 
 
-proj_matrices <- list()
+stochastic_pop <- list()
 
 for(i in 1:n){
   mp <- stochastic_proj(matrices, n = n0, smax = 70, nmax = 10000, time = 100) #smax initially set to 70 (number of nests in Sam's thesis)
-  proj_matrices[[i]] <- mp
+  stochastic_pop[[i]] <- mp
 }
 
-head(proj_matrices)
+head(stochastic_pop)
 
-#to plot with ggplot, create for loop for pop sizes in each matrix as a data frame
+#to plot with ggplot, create for loop for pop sizes in each projection as a data frame
 
 time <- 100
 
 df_plots <- list()
 
 for(i in 1:n){
-  mpl <- data.frame(time = 1:time, pop_sizes = proj_matrices[[i]]$pop.sizes)
+  mpl <- data.frame(time = 1:time, pop_sizes = stochastic_pop[[i]]$pop.sizes)
   df_plots[[i]] <- mpl
 }
 
@@ -136,7 +136,7 @@ ggplot(plot_pred, aes(x= time, y = mean)) +
 
 pop_sizes <- numeric()
 for (i in 1:n) {
-  ms <- proj_matrices[[i]]$pop.sizes[100]
+  ms <- stochastic_pop[[i]]$pop.sizes[100]
   pop_sizes[i] <- ms
 }
 
