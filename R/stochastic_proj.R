@@ -32,14 +32,14 @@ stochastic_proj <- function (matrices, n, nmax = NULL, smax = NULL, time = 50) {
   ## dependence on number of adults (the reproductive stage) 
     
     if (!is.null(smax)) { 
-      if (n[3] > smax) 
+      if (n[3] > smax) {
         n[2] <- n[2] + (n[3]- (n[3] * (smax/n[3]))) 
       n[3] <- n[3] * (smax/n[3]) 
-    }
+    }}
     
   ## Density dependence for the whole population, if specified
     if (!is.null(nmax)) { 
-      if (sum(n) > nmax) 
+      if (sum(n) > nmax)
         n <- n * (nmax/sum(n)) 
     }
     
