@@ -84,7 +84,7 @@ stable_stage <- make_projection_matrix(survival, fecundity, duration) %>%
   stable.stage() %>% as.list()
 
 # Initial population vector estimated from stable stage distribution 
-D1A29_n0 <- c(stable_stage[[1]]*Nc, stable_stage[[2]]*Nc, stable_stage[[3]]*Nc)
+D1A28_n0 <- c(stable_stage[[1]]*Nc, stable_stage[[2]]*Nc, stable_stage[[3]]*Nc)
 
 ### Life-stage Simulation Analysis for Population in Stochastic Environment
 
@@ -94,44 +94,44 @@ duration_list <- rep(list(duration), times = n_sim)
 
 ## Simulate list of matrices using the vital rates and make_projection_matrix function
 
-D1A29_matrices <- list()
+D1A28_matrices <- list()
 
 for(i in 1:n_sim){
   mpm <- make_projection_matrix(survival_list[[i]], 
                                 fecundity_list[[i]], 
                                 duration_list[[i]])
-  D1A29_matrices[[i]] <- mpm
+  D1A28_matrices[[i]] <- mpm
 }
 
-head(D1A29_matrices)
+head(D1A28_matrices)
 
 ## Repeat Stochastic Population Growth 
 
-D1A29_stochastic_pop <- list()
+D1A28_stochastic_pop <- list()
 
 for(i in 1:n_sim){
-  mp <- stochastic_proj(D1A29_matrices, n = D1A29_n0, time = time)
-  D1A29_stochastic_pop[i] <- mp
+  mp <- stochastic_proj(D1A28_matrices, n = D1A28_n0, time = time)
+  D1A28_stochastic_pop[i] <- mp
 }
 
 # Multiply female population sizes by 2 to get total population size
-D1A29_total_pop <- lapply(D1A29_stochastic_pop, "*", 2)
+D1A28_total_pop <- lapply(D1A28_stochastic_pop, "*", 2)
 
 
 # Create for loop for pop sizes in each projection as a data frame to plot with ggplot
 
-D1A29_df_plots <- list()
+D1A28_df_plots <- list()
 
 for(i in 1:n_sim){
-  mpl <- data.frame(time = 1:time, pop_sizes = D1A29_total_pop[[i]])
-  D1A29_df_plots[[i]] <- mpl
+  mpl <- data.frame(time = 1:time, pop_sizes = D1A28_total_pop[[i]])
+  D1A28_df_plots[[i]] <- mpl
 }
 
 # Add identifier for each simulation
-D1A29_plot_data <- bind_rows(D1A29_df_plots, .id = "id")
+D1A28_plot_data <- bind_rows(D1A28_df_plots, .id = "id")
 
 # Plot projection
-D1A29_plot <- ggplot(D1A29_plot_data, aes(time, pop_sizes, fill=id)) +
+D1A28_plot <- ggplot(D1A28_plot_data, aes(time, pop_sizes, fill=id)) +
   geom_line() +
   theme_classic() +
   labs(x = "Time (years)", y = "Total population size")
@@ -139,13 +139,13 @@ D1A29_plot <- ggplot(D1A29_plot_data, aes(time, pop_sizes, fill=id)) +
 
 # Mean population size time series with 95% confidence intervals from LSA
 
-D1A29_mean_plot_data <- D1A29_plot_data %>% 
+D1A28_mean_plot_data <- D1A28_plot_data %>% 
   group_by(time) %>% 
   summarise(mean = mean(pop_sizes),
             se_pop_size = sd(pop_sizes)/sqrt(length(pop_sizes)))
 
 # Get predictions and 95% CI
-D1A29_plot_pred <- D1A29_mean_plot_data %>% mutate(
+D1A28_plot_pred <- D1A28_mean_plot_data %>% mutate(
   pop_size = mean,  
   # lower limit 95% CI
   ll = mean - 1.96 * se_pop_size,
@@ -154,50 +154,50 @@ D1A29_plot_pred <- D1A29_mean_plot_data %>% mutate(
 )
 
 # Plot mean population projection with CIs
-D1A29_mean_plot <- ggplot(D1A29_plot_pred, aes(x= time, y = mean)) +
+D1A28_mean_plot <- ggplot(D1A28_plot_pred, aes(x= time, y = mean)) +
   geom_line() +
-  geom_ribbon(data = D1A29_plot_pred, aes(ymin = ll, ymax = ul), alpha = 0.2) + 
+  geom_ribbon(data = D1A28_plot_pred, aes(ymin = ll, ymax = ul), alpha = 0.2) + 
   theme_classic() +
   labs(x = "Time (years)", y = "Mean total population size")
 
 
 #### Calculate final mean population size and standard deviation from LSA
 
-D1A29_pop_sizes <- numeric()
+D1A28_pop_sizes <- numeric()
 for (i in 1:n_sim) {
-  ms <- D1A29_total_pop[[i]][time]
-  D1A29_pop_sizes[i] <- ms
+  ms <- D1A28_total_pop[[i]][time]
+  D1A28_pop_sizes[i] <- ms
 }
 
 #mean pop size
-D1A29_pop_mean <- mean(D1A29_pop_sizes)
+D1A28_pop_mean <- mean(D1A28_pop_sizes)
 
 # standard deviation pop size
-D1A29_pop_sd <- sd(D1A29_pop_sizes)
+D1A28_pop_sd <- sd(D1A28_pop_sizes)
 
 # standard error pop size
-D1A29_pop_se <- sd(D1A29_pop_sizes)/sqrt(length(D1A29_pop_sizes))
+D1A28_pop_se <- sd(D1A28_pop_sizes)/sqrt(length(D1A28_pop_sizes))
 
 
 #### Calculate Stochastic Growth Rate
 
-D1A29_lambda_s <- stoch.growth.rate(D1A29_matrices, prob = NULL, maxt = time,
+D1A28_lambda_s <- stoch.growth.rate(D1A28_matrices, prob = NULL, maxt = time,
                                     verbose = TRUE)
 
 #convert from log
-D1A29_lambda_s$approx <- exp(D1A29_lambda_s$approx)
-D1A29_lambda_s$sim <- exp(D1A29_lambda_s$sim)
-D1A29_lambda_s$sim.CI <- exp(D1A29_lambda_s$sim.CI)
+D1A28_lambda_s$approx <- exp(D1A28_lambda_s$approx)
+D1A28_lambda_s$sim <- exp(D1A28_lambda_s$sim)
+D1A28_lambda_s$sim.CI <- exp(D1A28_lambda_s$sim.CI)
 
 #### Calculate Quasi-extinction Probability
 
-D1A29_quasi <- stoch.quasi.ext(D1A29_matrices, n0= D1A29_n0, Nx = 50, tmax = time, maxruns = 1,
+D1A28_quasi <- stoch.quasi.ext(D1A28_matrices, n0= D1A28_n0, Nx = 50, tmax = time, maxruns = 1,
                                nreps = 5000, prob = NULL, sumweight = NULL, verbose = TRUE)
 
 # Plot quasi-extinction probabilities
-D1A29_quasi_df <- data.frame(D1A29_quasi, "Year" = 1:time) %>% gather("sim", "quasi", -"Year")
+D1A28_quasi_df <- data.frame(D1A28_quasi, "Year" = 1:time) %>% gather("sim", "quasi", -"Year")
 
-D1A29_quasi_plot <- ggplot(D1A29_quasi_df, aes(x = Year, y = quasi, colour = sim)) +
+D1A28_quasi_plot <- ggplot(D1A28_quasi_df, aes(x = Year, y = quasi, colour = sim)) +
   geom_line() +
   theme_bw() +
   ylim(0, 1) +
@@ -207,17 +207,17 @@ D1A29_quasi_plot <- ggplot(D1A29_quasi_df, aes(x = Year, y = quasi, colour = sim
 
 #### Calculate Stochastic Elasticities
 
-D1A29_sens <- stoch.sens(D1A29_matrices, tlimit=time)
+D1A28_sens <- stoch.sens(D1A28_matrices, tlimit=time)
 
-D1A29_elas <- D1A29_sens$elasticities
+D1A28_elas <- D1A28_sens$elasticities
 
-D1A29_elas_v <- c(D1A29_elas[1,1], D1A29_elas[1,2], D1A29_elas[1,3], D1A29_elas[2,1], D1A29_elas[2,2], D1A29_elas[2,3], D1A29_elas[3,1], D1A29_elas[3,2], D1A29_elas[3,3])
+D1A28_elas_v <- c(D1A28_elas[1,1], D1A28_elas[1,2], D1A28_elas[1,3], D1A28_elas[2,1], D1A28_elas[2,2], D1A28_elas[2,3], D1A28_elas[3,1], D1A28_elas[3,2], D1A28_elas[3,3])
 
 stage<-c("m1", "m2", "m3", "s1", "s2", "s3", "g1", "g2", "s3")
 
-D1A29_elas_df <- data.frame(D1A29_elas_v) %>% gather("duration", "elasticity") %>% data.frame(stage)
+D1A28_elas_df <- data.frame(D1A28_elas_v) %>% gather("duration", "elasticity") %>% data.frame(stage)
 
-D1A29_elas_plot <- ggplot(D1A29_elas_df, aes(x = stage, y= D1A29_elas_v)) + 
+D1A28_elas_plot <- ggplot(D1A28_elas_df, aes(x = stage, y= D1A28_elas_v)) + 
   labs(x = "Vital rate", y = "Stochastic elasticity") +
   theme_bw() +
   geom_col(fill = "grey20")
@@ -819,21 +819,21 @@ D5A24_elas_plot <- ggplot(D5A24_elas_df, aes(x = stage, y= D5A24_elas_v)) +
 #### PLOTS ----
 
 ## Stochastic Population Projection Plot
-A30_plot <- D1A29_plot + D2A27_plot + D3A26_plot + D4A25_plot + D5A24_plot
+A30_plot <- D1A28_plot + D2A27_plot + D3A26_plot + D4A25_plot + D5A24_plot
 
 ## Mean and CI Stochastic Population Plot
-A30_mean_plot <- D1A29_mean_plot + D2A27_mean_plot + D3A26_mean_plot + D4A25_mean_plot + D5A24_mean_plot
+A30_mean_plot <- D1A28_mean_plot + D2A27_mean_plot + D3A26_mean_plot + D4A25_mean_plot + D5A24_mean_plot
 
 
 # Stochastic Population Growth (Lambda s)
 
-A30_lambda_approx <- c(D1A29_lambda_s$approx, D2A27_lambda_s$approx, D3A26_lambda_s$approx, D4A25_lambda_s$approx, D5A24_lambda_s$approx)
+A30_lambda_approx <- c(D1A28_lambda_s$approx, D2A27_lambda_s$approx, D3A26_lambda_s$approx, D4A25_lambda_s$approx, D5A24_lambda_s$approx)
 
-A30_lambda_sim <- c(D1A29_lambda_s$sim, D2A27_lambda_s$sim, D3A26_lambda_s$sim, D4A25_lambda_s$sim, D5A24_lambda_s$sim)
+A30_lambda_sim <- c(D1A28_lambda_s$sim, D2A27_lambda_s$sim, D3A26_lambda_s$sim, D4A25_lambda_s$sim, D5A24_lambda_s$sim)
 
-A30_lower_CI <- c(D1A29_lambda_s$sim.CI[1], D2A27_lambda_s$sim.CI[1], D3A26_lambda_s$sim.CI[1], D4A25_lambda_s$sim.CI[1], D5A24_lambda_s$sim.CI[1])
+A30_lower_CI <- c(D1A28_lambda_s$sim.CI[1], D2A27_lambda_s$sim.CI[1], D3A26_lambda_s$sim.CI[1], D4A25_lambda_s$sim.CI[1], D5A24_lambda_s$sim.CI[1])
 
-A30_upper_CI <- c(D1A29_lambda_s$sim.CI[2], D2A27_lambda_s$sim.CI[2], D3A26_lambda_s$sim.CI[2], D4A25_lambda_s$sim.CI[2], D5A24_lambda_s$sim.CI[2])
+A30_upper_CI <- c(D1A28_lambda_s$sim.CI[2], D2A27_lambda_s$sim.CI[2], D3A26_lambda_s$sim.CI[2], D4A25_lambda_s$sim.CI[2], D5A24_lambda_s$sim.CI[2])
 
 stage_duration <- c("1 year", "2 years", "3 years", "4 years", "5 years")
 
@@ -850,29 +850,29 @@ A30_lambda_plot <- ggplot(A30_lambda_df) +
 
 ## Quasi-extinction Threshold Plots
 
-A30_quasi_df<- rbind.data.frame(D1A29_quasi_df, D2A27_quasi_df, D3A26_quasi_df, D4A25_quasi_df, D5A24_quasi_df)
+A30_quasi_df<- rbind.data.frame(D1A28_quasi_df, D2A27_quasi_df, D3A26_quasi_df, D4A25_quasi_df, D5A24_quasi_df)
 
 A30_quasi_plot <- ggplot(A30_quasi_df, aes(x = Year, y = quasi, colour = sim)) +
   geom_line() +
   theme_bw() +
   ylim(0, 1) +
   labs(y = "Cumulative probability of quasi-extinction") +
-  scale_colour_discrete(name = "Immature stage \nduration", breaks = c("D1A29_quasi", "D2A27_quasi", "D3A26_quasi", "D4A25_quasi", "D5A24_quasi"), labels = c("1 year", "2 years", "3 years", "4 years", "5 years"))
+  scale_colour_discrete(name = "Immature stage \nduration", breaks = c("D1A28_quasi", "D2A27_quasi", "D3A26_quasi", "D4A25_quasi", "D5A24_quasi"), labels = c("1 year", "2 years", "3 years", "4 years", "5 years"))
 
-#A30_quasi_plots <- D1A29_quasi_plot + D2A27_quasi_plot + D3A26_quasi_plot + D4A25_quasi_plot + D5A24_quasi_plot
+#A30_quasi_plots <- D1A28_quasi_plot + D2A27_quasi_plot + D3A26_quasi_plot + D4A25_quasi_plot + D5A24_quasi_plot
 
 
 #Elasticity analysis plots
 
-A30_elas_df <- rbind.data.frame(D1A29_elas_df, D2A27_elas_df, D3A26_elas_df, D4A25_elas_df, D5A24_elas_df)
+A30_elas_df <- rbind.data.frame(D1A28_elas_df, D2A27_elas_df, D3A26_elas_df, D4A25_elas_df, D5A24_elas_df)
 
 A30_elas_plot <- ggplot(A30_elas_df, aes(x = stage, y= elasticity, fill = duration)) + 
   labs(x = "Vital rate", y = "Stochastic elasticity") +
   theme_bw() +
   geom_col(position = "dodge", colour = "black") +
-  scale_fill_manual(name = "Immature stage \nduration", breaks = c("D1A29_elas_v", "D2A27_elas_v", "D3A26_elas_v", "D4A25_elas_v", "D5A24_elas_v"), labels = c("1 year", "2 years", "3 years", "4 years", "5 years"), values = c("grey65", "grey40", "grey35", "grey15", "grey0"))
+  scale_fill_manual(name = "Immature stage \nduration", breaks = c("D1A28_elas_v", "D2A27_elas_v", "D3A26_elas_v", "D4A25_elas_v", "D5A24_elas_v"), labels = c("1 year", "2 years", "3 years", "4 years", "5 years"), values = c("grey65", "grey40", "grey35", "grey15", "grey0"))
 
-#image2(D1A29_elas)
+#image2(D1A28_elas)
 #image2(D2A27_elas)
 #image2(D3A26_elas)
 #image2(D4A25_elas)
